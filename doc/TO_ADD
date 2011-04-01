@@ -1,5 +1,5 @@
 memcpy
-memset
+memset - DONE
 strlen
 strcmp
 (other string functions)
