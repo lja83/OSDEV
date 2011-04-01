@@ -1,0 +1,8 @@
+memcpy
+memset
+strlen
+strcmp
+(other string functions)
+
+void monitor_write_hex(u32int n)
+void monitor_write_dec(u32int n)
