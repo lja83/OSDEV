@@ -11,6 +11,7 @@ int main(struct multiboot *mboot_ptr)
 	//asm("movl $0xDEADBABA, %eax");
 	monitor_clear();
 	init_descriptor_tables();
+	init_isr_handlers();
 
 	asm volatile("int $0x3");
 	asm volatile("int $0x4");
