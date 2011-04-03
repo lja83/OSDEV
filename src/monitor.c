@@ -68,6 +68,50 @@ void monitor_write(char c[])
 	}
 }
 
+void monitor_write_dec(u32int num)
+{
+	if(num > 9)
+	{
+		monitor_write_dec(num / 10);
+		monitor_put((num % 10) + 0x30);
+	}
+	else
+	{
+		monitor_put(num + 0x30);
+	}
+}
+
+void monitor_write_hex(u32int num)
+{
+	monitor_put('0');
+	monitor_put('x');
+	write_hex(num);
+}
+
+void write_hex(u32int num)
+{
+	u32int hexNum;
+
+	if(num > 15)
+	{
+		write_hex(num / 16);
+		hexNum = num % 16;
+	}
+	else
+	{
+		hexNum = num;
+	}
+
+	if(hexNum > 9)
+	{
+		monitor_put(hexNum + 65 - 10);
+	}
+	else
+	{
+		monitor_put(hexNum + 0x30);
+	}
+}
+
 void monitor_clear()
 {
 	int i;
