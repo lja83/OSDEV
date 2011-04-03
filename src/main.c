@@ -6,6 +6,12 @@
 #include "timer.h"
 #include "isr.h"
 
+void keyboard(registers_t regs)
+{
+	monitor_write("Keyboard struck!\n");
+	inb(0x60);
+}
+
 int main(struct multiboot *mboot_ptr)
 {
 	int i;
@@ -20,6 +26,8 @@ int main(struct multiboot *mboot_ptr)
 
 	asm volatile("sti");
 	init_timer(50);
+
+	register_interrupt_handler(IRQ1, &keyboard);
 
 	return 0;
 }

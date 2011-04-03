@@ -141,3 +141,28 @@ void monitor_scroll()
 
 	cursor_y = 24;
 }
+
+void monitor_write_to_line(char c[], u8int line)
+{
+	int i;
+	int j;
+
+	u8int old_x = cursor_x;
+	u8int old_y = cursor_y;
+
+	cursor_x = 0;
+	cursor_y = line;
+
+	for(i = 0; c[i] != 0; i++)
+	{
+		monitor_put(c[i]);
+	}
+
+	for(j = 0;j < max_cols - i; j++)
+	{
+		monitor_put(' ');
+	}
+
+	cursor_x = old_x;
+	cursor_y = old_y;
+}

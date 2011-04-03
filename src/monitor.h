@@ -26,4 +26,6 @@ void move_cursor();
 
 void monitor_scroll();
 
+void monitor_write_to_line(char *c, u8int line);
+
 #endif // MONITOR_H

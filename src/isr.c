@@ -33,6 +33,12 @@ void isr_handler(registers_t regs)
 // This gets called from our ASM interrupt handler stub.
 void irq_handler(registers_t regs)
 {
+	if(interrupt_handlers[regs.int_no] != 0)
+	{
+		isr_t handler = interrupt_handlers[regs.int_no];
+		handler(regs);
+	}
+
 	// Send an EOI (end of interrupt) signal to the PICS.
 	// If this interrupt involved the slave
 	if (regs.int_no >= 40)
@@ -43,10 +49,4 @@ void irq_handler(registers_t regs)
 
 	// Send reset signal to master. (As well as slave, if necessary).
 	outb(0x20, 0x20);
-
-	if(interrupt_handlers[regs.int_no] != 0)
-	{
-		isr_t handler = interrupt_handlers[regs.int_no];
-		handler(regs);
-	}
 }
