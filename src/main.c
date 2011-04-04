@@ -15,19 +15,17 @@ void keyboard(registers_t regs)
 int main(struct multiboot *mboot_ptr)
 {
 	int i;
-	// All our initialisation calls will go in here.
-	//asm("movl $0xDEADBABA, %eax");
 	monitor_clear();
+	monitor_put('\n');			// Reserve the top row for the clock ticks
+
+
 	init_descriptor_tables();
 	init_isr_handlers();
-
-	asm volatile("int $0x3");
-	asm volatile("int $0x4");
-
-	asm volatile("sti");
 	init_timer(50);
 
 	register_interrupt_handler(IRQ1, &keyboard);
+
+	asm volatile("sti");
 
 	return 0;
 }

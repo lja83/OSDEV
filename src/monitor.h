@@ -22,6 +22,9 @@ void monitor_write_dec(u32int num);
 void monitor_write_hex(u32int num);
 void write_hex(u32int num);
 
+u8int *monitor_get_cursor();
+
+void monitor_move_cursor(u8int, u8int);
 void move_cursor();
 
 void monitor_scroll();

@@ -10,9 +10,24 @@ u32int tick = 0;
 static void timer_callback(registers_t regs)
 {
 	tick++;
+	u8int *origLocation;
+	int i;
+	u8int origX;
+	u8int origY;
+
+	origLocation = monitor_get_cursor();
+	origX = origLocation[0];
+	origY = origLocation[1];
+
+	monitor_move_cursor(0, 0);
 	monitor_write("Tick: ");
 	monitor_write_dec(tick);
-	monitor_put('\n');
+	for(i = 0; i < 80 - monitor_get_cursor()[0]; i++)
+	{
+		monitor_put(' ');
+	}
+	monitor_move_cursor(origX, origY);
+	//monitor_put('\n');
 }
 
 void init_timer(u32int frequency)

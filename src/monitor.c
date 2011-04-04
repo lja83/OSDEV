@@ -16,6 +16,21 @@ void move_cursor()
 	outb(0x3D5, CURSOR_LOCATION);
 }
 
+u8int *monitor_get_cursor()
+{
+	u8int location[2];
+	location[0] = cursor_x;
+	location[1] = cursor_y;
+	return location;
+}
+
+void monitor_move_cursor(u8int x, u8int y)
+{
+	cursor_x = x;
+	cursor_y = y;
+	move_cursor();
+}
+
 void monitor_put(char c)
 {
 	u8int backColor = 0;
