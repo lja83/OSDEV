@@ -4,7 +4,7 @@ strlen
 strcmp
 (other string functions)
 
-void monitor_write_hex(u32int n)
-void monitor_write_dec(u32int n)
+void monitor_write_hex(u32int n) - DONE
+void monitor_write_dec(u32int n) - DONE
 
 Ability to set text attributes before write
