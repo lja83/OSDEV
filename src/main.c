@@ -8,8 +8,11 @@
 
 void keyboard(registers_t regs)
 {
-	monitor_write("Keyboard struck!\n");
-	inb(0x60);
+	u8int scanCode;
+	scanCode = inb(0x60);
+	monitor_write("Scancode: ");
+	monitor_write_hex(scanCode);
+	monitor_put('\n');
 }
 
 int main(struct multiboot *mboot_ptr)
