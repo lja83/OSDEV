@@ -16,6 +16,10 @@ typedef unsigned int	size_t;
 
 #define NULL 0x0
 
+#define PANIC(msg) panic(msg, __FILE__, __LINE__);
+
+void panic(const char* msg, const char *file, u32int line);
+
 void outb(u16int port, u8int value);
 u8int inb(u16int port);
 u16int inw(u16int port);

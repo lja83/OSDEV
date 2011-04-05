@@ -18,8 +18,18 @@ void init_isr_handlers()
 
 void register_interrupt_handler(u8int n, isr_t handler)
 {
-	monitor_write("Registering a handler...\n");
 	interrupt_handlers[n] = handler;
+	if (n >= IRQ0)
+	{
+		monitor_write("IRQ ");
+		monitor_write_dec(n - IRQ0);
+	}
+	else
+	{
+		monitor_write("Interrupt ");
+		monitor_write_dec(n);
+	}
+	monitor_write(" Registered...\n");
 }
 
 void unregister_interrupt_handler(u8int n)
@@ -36,9 +46,18 @@ int is_registered(u8int n)
 // This gets called from our ASM interrupt handler stub.
 void isr_handler(registers_t regs)
 {
-	monitor_write("received interrupt: ");
-	monitor_write_dec(regs.int_no);
-	monitor_put('\n');
+	if(interrupt_handlers[regs.int_no] != 0)
+	{
+		isr_t handler = interrupt_handlers[regs.int_no];
+		handler(regs);
+	}
+	else
+	{
+		monitor_write("Unhandled Interrupt: ");
+		monitor_write_dec(regs.int_no);
+		monitor_put('\n');
+		PANIC("Unhandled Interrupt");
+	}
 }
 
 // This gets called from our ASM interrupt handler stub.

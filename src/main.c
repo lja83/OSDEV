@@ -9,17 +9,19 @@
 
 int main(struct multiboot *mboot_ptr)
 {
-	int i;
 	monitor_clear();
 	monitor_put('\n');			// Reserve the top row for the clock ticks
 
-
 	init_descriptor_tables();
-	init_isr_handlers();
 	init_timer(50);
 
 	register_interrupt_handler(IRQ1, &keyboard);
+	initialise_paging();
 	asm volatile("sti");
+
+	monitor_write("Press T to toggle registration of the timer interrupt handler.\n");
+	monitor_write("Press U to generate an unhandled interrupt.\n");
+	monitor_write("Press P to generate a page fault.\n");
 
 	return 0;
 }

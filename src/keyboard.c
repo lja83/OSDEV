@@ -18,4 +18,13 @@ void keyboard(registers_t regs)
 		else
 			register_interrupt_handler(IRQ0, &timer_callback);
 	}
+	else if(scanCode == 0x19)
+	{
+		u32int *ptr = (u32int*)0xA0000000;
+		u32int do_page_fault = *ptr;
+	}
+	else if (scanCode == 0x16)
+	{
+		asm volatile("int $0x05");
+	}
 }
