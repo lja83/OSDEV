@@ -7,7 +7,7 @@
 
 u32int tick = 0;
 
-static void timer_callback(registers_t regs)
+void timer_callback(registers_t regs)
 {
 	tick++;
 	u8int *origLocation;

@@ -5,15 +5,7 @@
 #include "descriptor_tables.h"
 #include "timer.h"
 #include "isr.h"
-
-void keyboard(registers_t regs)
-{
-	u8int scanCode;
-	scanCode = inb(0x60);
-	monitor_write("Scancode: ");
-	monitor_write_hex(scanCode);
-	monitor_put('\n');
-}
+#include "keyboard.h"
 
 int main(struct multiboot *mboot_ptr)
 {
@@ -27,7 +19,6 @@ int main(struct multiboot *mboot_ptr)
 	init_timer(50);
 
 	register_interrupt_handler(IRQ1, &keyboard);
-
 	asm volatile("sti");
 
 	return 0;

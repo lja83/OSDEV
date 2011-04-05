@@ -4,8 +4,10 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+#include "isr.h"
 #include "common.h"
 
 void init_timer(u32int frequency);
+void timer_callback(registers_t regs);
 
 #endif // TIMER_H

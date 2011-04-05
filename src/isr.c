@@ -22,6 +22,17 @@ void register_interrupt_handler(u8int n, isr_t handler)
 	interrupt_handlers[n] = handler;
 }
 
+void unregister_interrupt_handler(u8int n)
+{
+	monitor_write("Unregistering a handler...\n");
+	interrupt_handlers[n] = 0x0;
+}
+
+int is_registered(u8int n)
+{
+	return !(interrupt_handlers[n] == 0);
+}
+
 // This gets called from our ASM interrupt handler stub.
 void isr_handler(registers_t regs)
 {
