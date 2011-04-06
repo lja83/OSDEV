@@ -1,4 +1,4 @@
-#include "kmalloc.h"
+#include "kheap.h"
 #include "common.h"
 
 extern u32int end;
