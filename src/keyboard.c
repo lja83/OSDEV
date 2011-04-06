@@ -3,6 +3,8 @@
 #include "isr.h"
 #include "timer.h"
 
+extern void heapTest();
+
 void keyboard(registers_t regs)
 {
 	u8int scanCode;
@@ -26,5 +28,13 @@ void keyboard(registers_t regs)
 	else if (scanCode == 0x16)
 	{
 		asm volatile("int $0x05");
+	}
+	else if (scanCode == 0x23)
+	{
+		heapTest();
+	}
+	else if (scanCode == 0x1E)
+	{
+		ASSERT(1 == 0);
 	}
 }

@@ -27,8 +27,22 @@ u16int inw(u16int port)
 void panic(const char* message, const char* file, u32int line)
 {
 	asm volatile ("cli");
-	monitor_write("PANIC(");
+	monitor_write("\nPANIC(");
 	monitor_write(message);
+	monitor_write(") at ");
+	monitor_write(file);
+	monitor_write(":");
+	monitor_write_dec(line);
+	monitor_put('\n');
+	for(;;);
+}
+
+void panic_assert(const char *file, u32int line, const char *desc)
+{
+	asm volatile("cli");
+
+	monitor_write("ASSERTION-FAILED(");
+	monitor_write(desc);
 	monitor_write(") at ");
 	monitor_write(file);
 	monitor_write(":");

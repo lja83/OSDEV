@@ -17,8 +17,10 @@ typedef unsigned int	size_t;
 #define NULL 0x0
 
 #define PANIC(msg) panic(msg, __FILE__, __LINE__);
+#define ASSERT(b) ((b) ? (void)0:panic_assert(__FILE__, __LINE__, #b));
 
 void panic(const char* msg, const char *file, u32int line);
+void panic_assert(const char *file, u32int line, const char *desc);
 
 void outb(u16int port, u8int value);
 u8int inb(u16int port);
