@@ -21,13 +21,12 @@ void timer_callback(registers_t regs)
 
 	monitor_move_cursor(0, 0);
 	monitor_write("Tick: ");
-	monitor_write_dec(tick);
+	kdec(tick);
 	for(i = 0; i < 80 - monitor_get_cursor()[0]; i++)
 	{
 		monitor_put(' ');
 	}
 	monitor_move_cursor(origX, origY);
-	//monitor_put('\n');
 }
 
 void init_timer(u32int frequency)

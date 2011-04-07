@@ -1,6 +1,6 @@
-SOURCES=boot.o main.o common.o monitor.o descriptor_tables.o gdt.o string.o interrupt.o isr.o timer.o keyboard.o kheap.o paging.o ordered_array.o
+SOURCES=boot.o main.o common.o monitor.o descriptor_tables.o gdt.o string.o interrupt.o isr.o timer.o keyboard.o
 
-CFLAGS=-nostdlib -nostdinc -fno-builtin -fno-stack-protector -g
+CFLAGS=-nostdlib -nostdinc -fno-builtin -fno-stack-protector -g -Wall
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 

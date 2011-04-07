@@ -22,12 +22,12 @@ void register_interrupt_handler(u8int n, isr_t handler)
 	if (n >= IRQ0)
 	{
 		monitor_write("IRQ ");
-		monitor_write_dec(n - IRQ0);
+		kdec(n - IRQ0);
 	}
 	else
 	{
 		monitor_write("Interrupt ");
-		monitor_write_dec(n);
+		kdec(n);
 	}
 	monitor_write(" Registered...\n");
 }
@@ -54,7 +54,7 @@ void isr_handler(registers_t regs)
 	else
 	{
 		monitor_write("Unhandled Interrupt: ");
-		monitor_write_dec(regs.int_no);
+		kdec(regs.int_no);
 		monitor_put('\n');
 		PANIC("Unhandled Interrupt");
 	}

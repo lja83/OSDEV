@@ -24,6 +24,21 @@ u8int *monitor_get_cursor()
 	return location;
 }
 
+void kprint(char *c)
+{
+	monitor_write(c);
+}
+
+void khex(u32int num)
+{
+	monitor_write_base(num, 16);
+}
+
+void kdec(u32int num)
+{
+	monitor_write_base(num, 10);
+}
+
 void monitor_move_cursor(u8int x, u8int y)
 {
 	cursor_x = x;
@@ -83,48 +98,54 @@ void monitor_write(char c[])
 	}
 }
 
-void monitor_write_dec(u32int num)
+int lzeros(u32int num, u32int base, u32int len)
 {
-	if(num > 9)
+	while(num != 0)
 	{
-		monitor_write_dec(num / 10);
-		monitor_put((num % 10) + 0x30);
+		len--;
+		num /= base;
+	}
+	return len;
+}
+
+void monitor_write_base(u32int num, u32int base)
+{
+	u32int baseNum;
+
+	if(num > (base - 1))
+	{
+		monitor_write_base(num / base, base);
+		baseNum = num % base;
 	}
 	else
 	{
-		monitor_put(num + 0x30);
+		baseNum = num;
+	}
+
+	if(baseNum > 9)
+	{
+		// Capital letters start at 65 but we have to
+		// subtract 10 to get the offset
+		monitor_put(baseNum + 65 - 10);
+	}
+	else
+	{
+		// Numbers start at 0x30 in ASCII
+		monitor_put(baseNum + 0x30);
 	}
 }
 
-void monitor_write_hex(u32int num)
+void padprint(u32int num, u32int base, u32int len, char pad)
 {
-	monitor_put('0');
-	monitor_put('x');
-	write_hex(num);
-}
-
-void write_hex(u32int num)
-{
-	u32int hexNum;
-
-	if(num > 15)
+	int i = lzeros(num, base, len);
+	if (i == len)
+		i--;
+	while(i > 0)
 	{
-		write_hex(num / 16);
-		hexNum = num % 16;
+		monitor_put(pad);
+		i--;
 	}
-	else
-	{
-		hexNum = num;
-	}
-
-	if(hexNum > 9)
-	{
-		monitor_put(hexNum + 65 - 10);
-	}
-	else
-	{
-		monitor_put(hexNum + 0x30);
-	}
+	monitor_write_base(num, base);
 }
 
 void monitor_clear()

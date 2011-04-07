@@ -41,5 +41,6 @@ typedef void (*isr_t)(registers_t);
 void register_interrupt_handler(u8int n, isr_t handler);
 void unregister_interrupt_handler(u8int n);
 int is_registered(u8int n);
+void init_isr_handlers();
 
 #endif // ISR_H

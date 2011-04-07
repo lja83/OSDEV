@@ -8,4 +8,5 @@ void *memset(void *s, int c, size_t n)
 	{
 		*((unsigned char*)s + i) = (unsigned char)c;
 	}
+	return s;
 }

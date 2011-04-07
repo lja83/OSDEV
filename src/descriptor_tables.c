@@ -9,6 +9,7 @@
 #include "descriptor_tables.h"
 #include "string.h"
 #include "isr.h"
+#include "monitor.h"
 
 // Lets us access our ASM functions from our C code.
 extern void gdt_flush(u32int);
@@ -31,18 +32,16 @@ idt_ptr_t	idt_ptr;
 void init_descriptor_tables()
 {
 	// Initialise the global descriptor table.
-	monitor_write("Initialising GDT...\n");
 	init_gdt();
-	monitor_write("GDT Initialised.\nInitialising IDT...\n");
+	monitor_write("GDT Initialised.\n");
 	init_idt();
-	monitor_write("IDT Initialised.\nInitialising ISR Handlers...\n");
+	monitor_write("IDT Initialised.\n");
 	init_isr_handlers();
 	monitor_write("ISR Handlers Initialised.\n");
 }
 
 static void init_idt()
 {
-	monitor_write("Totally initialising the IDT.  Yep, no reason to think otherwise...\n");
 	idt_ptr.limit = sizeof(idt_entry_t) * 256 -1;
 	idt_ptr.base = (u32int)&idt_entries;
 

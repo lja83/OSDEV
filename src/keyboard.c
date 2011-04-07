@@ -5,13 +5,12 @@
 
 extern void heapTest();
 
+int print_scancode = 0;
+
 void keyboard(registers_t regs)
 {
 	u8int scanCode;
 	scanCode = inb(0x60);
-	monitor_write("Scancode: ");
-	monitor_write_hex(scanCode);
-	monitor_put('\n');
 
 	if(scanCode == 0x14)
 	{
@@ -36,5 +35,28 @@ void keyboard(registers_t regs)
 	else if (scanCode == 0x1E)
 	{
 		ASSERT(1 == 0);
+	}
+	else if (scanCode == 0x32)
+	{
+		meminfo();
+	}
+	else if(scanCode == 0x3B)
+	{
+		if (print_scancode == 1)
+		{
+			print_scancode = 0;
+			kprint("Scancodes OFF\n");
+		}
+		else if(print_scancode == 0)
+		{
+			print_scancode = 1;
+			kprint("Sancodes ON\n");
+		}
+	}
+	else if(print_scancode == 1)
+	{
+		kprint("Unhandled Scancode: 0x");
+		khex(scanCode);
+		monitor_put('\n');
 	}
 }

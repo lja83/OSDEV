@@ -16,11 +16,13 @@ void monitor_clear();
 
 // Output a null-terminated ASCII string to the monitor.
 void monitor_write(char *c);
+void kprint(char *c);
 
-void monitor_write_dec(u32int num);
-
-void monitor_write_hex(u32int num);
-void write_hex(u32int num);
+void khex(u32int num);
+void kdec(u32int num);
+void monitor_write_base(u32int num, u32int base);
+int lzeros(u32int, u32int, u32int);
+void padprint(u32int num, u32int base, u32int len, char pad);
 
 u8int *monitor_get_cursor();
 
