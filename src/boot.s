@@ -1,47 +1,38 @@
-;
-; boot.s -- Kernel start location.  Also defines multiboot header.
-; Based on Bran's kernel development tutorial file start.asm
-;
+global loader							; make entry point visible to linker
+global stack
+global e_stack
+extern kmain							; kmain is defined elsewhere
 
-MBOOT_PAGE_ALIGN	equ 1<<0	; Load kernel and modules on a page boundary
-MBOOT_MEM_INFO		equ 1<<1	; Provide your kernel with memory info
-MBOOT_HEADER_MAGIC	equ 0x1BADB002	; Multiboot Magic value
-; NOTE: We do not use MBOOT_AOUT_KLUDGE. It means that GRUB does not
-; pass us a symbol table.
-MBOOT_HEADER_FLAGS	equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO
-MBOOT_CHECKSUM		equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
+;setting up the Multiboot header - see GRUB docs for details
+MODULEALIGN equ  1<<0					; align loaded modules on page boundaries
+MEMINFO		equ  1<<1					; provide memory map
+FLAGS		equ  MODULEALIGN | MEMINFO	; this is the Multiboot 'flag' field
+MAGIC		equ  0x1BADB002				; 'magic number' lets bootloader find the header
+CHECKSUM	equ  -(MAGIC + FLAGS)		; checksum required
 
-[BITS 32]				; All instructions should be 32-bit.
+section .text
+align 4
+MultiBootHeader:
+	dd MAGIC
+	dd FLAGS
+	dd CHECKSUM
 
-[GLOBAL mboot]				; Make 'mboot' accessible from C.
-[EXTERN code]				; Start of the '.text' section.
-[EXTERN bss]				; Start of the '.bss' section.
-[EXTERN end]				; End of the last loadable section,
+; reserve initial kernel stack space
+STACKSIZE equ 0x4000					; that's 16k.
 
-mboot:
-  dd MBOOT_HEADER_MAGIC			; GRUB will search for this value on each
-					; 4-byte boundary in your kernel file
-  dd MBOOT_HEADER_FLAGS			; How GRUB should load your file / settings
-  dd MBOOT_CHECKSUM			; To ensure that the above values are correct.
+loader:
+	mov esp, stack+STACKSIZE			; set up the stack
+	push eax							; pass Multiboot magic number
+	push ebx							; pass Multiboot info structure
 
-  dd mboot				; Location of this descriptor
-  dd code				; Start of kernel '.text' (code) section.
-  dd bss				; End of kernel '.data' section.
-  dd end				; End of kernel.
-  dd start				; Kernel entry point (initial EIP).
+	call kmain							; call kernel proper
 
-[GLOBAL start]				; Kernel entry point.
-[EXTERN kmain]				; This is the entry point of our C code
+	;cli								; disable interrupts
+hang:
+	hlt									; halt machine should kernel return
+	jmp	hang
 
-start:
-  push	ebx				; Load multiboot header location
-
-  ; Execute the kernel:
-  cli					; Disable interrupts.
-  call kmain			; call our main() function.
-loop:
-  hlt
-  jmp loop				; Enter an infinite loop. to stop the processor
-						; executing whatever rubbish is in the memory
-						; after our kernel!
-
+section .bss
+align 4
+stack:
+	resb STACKSIZE						; reserve 16k stack on a doubleword boundary

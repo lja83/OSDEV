@@ -8,6 +8,9 @@
 #include "isr.h"
 #include "keyboard.h"
 
+extern u32int kstart;
+extern u32int ebss;
+
 void heapTest()
 {
 	kprint("Jeff should probably get off his ass and write a heap before you go testing it.\n");
@@ -33,9 +36,9 @@ void meminfo()
 			kprint("Memory map available.\n");
 			multiboot_memory_map_t *mmap = (multiboot_memory_map_t*)start_addr;
 
-			kprint("/************************************************\\\n");
-			kprint("|    Begin         End         Length        Typ |\n");
-			kprint("|------------------------------------------------|\n");
+			kprint("/******************************************************\\\n");
+			kprint("|    Begin         End         Length            Type  |\n");
+			kprint("|------------------------------------------------------|\n");
 
 			while((u32int)mmap < start_addr + mmap_len)
 			{
@@ -50,11 +53,31 @@ void meminfo()
 				padprint((u32int)mmap->len, 10, 10, '_');
 				kprint(" B  |  ");
 				kdec(mmap->type);
-				kprint("  |\n");
+				switch(mmap->type)
+				{
+					case 1:
+						kprint("  Avbl ");
+						break;
+					case 2:
+						kprint("  Rsvd ");
+						break;
+					case 3:
+						kprint("  Recl ");
+						break;
+					case 4:
+						kprint(" ACPI N");
+						break;
+					kprint(    "  Undef");
+				}
+				kprint(" |\n");
 				mmap += 1;
 			}
 
-			kprint("\\************************************************/\n");
+			kprint("\\******************************************************/\n");
+			kprint("Kernel starts at 0x"); khex((u32int)&kstart);
+			kprint("\n");
+			kprint("Kernel ends at   0x"); khex((u32int)&ebss);
+			kprint("\n");
 		}
 	}
 	else
