@@ -7,6 +7,7 @@
 #include "timer.h"
 #include "isr.h"
 #include "keyboard.h"
+#include "bitset.h"
 
 extern u32int kstart;
 extern u32int ebss;
