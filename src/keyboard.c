@@ -2,6 +2,7 @@
 #include "monitor.h"
 #include "isr.h"
 #include "timer.h"
+#include "pmm.h"
 
 extern void heapTest();
 
@@ -39,6 +40,49 @@ void keyboard(registers_t regs)
 	else if (scanCode == 0x32)
 	{
 		meminfo();
+	}
+	else if (scanCode == 0x33)
+	{
+		while(1)
+		{
+			kprint("0x");
+			khex((u32int)palloc());
+			kprint(" ");
+		}
+	}
+	else if (scanCode == 0x34)
+	{
+		u32int *page1;
+		u32int *page2;
+		u32int *page3;
+		u32int *page4;
+		u32int *page5;
+
+		kprint("Testing memory allocation and deallocation.\n");
+
+		page1 = palloc();
+		kprint("Allocated 0x"); khex((u32int)page1); kprint("\n");
+		page2 = palloc();
+		kprint("Allocated 0x"); khex((u32int)page2); kprint("\n");
+		page3 = palloc();
+		kprint("Allocated 0x"); khex((u32int)page3); kprint("\n");
+		page4 = palloc();
+		kprint("Allocated 0x"); khex((u32int)page4); kprint("\n");
+
+		kprint("Freeing 0x"); khex((u32int)page1); kprint("\n");
+		pfree(page1);
+		page1 = 0;
+		kprint("Freeing 0x"); khex((u32int)page3); kprint("\n");
+		pfree(page3);
+		page3 = 0;
+
+		page1 = palloc();
+		kprint("Allocated 0x"); khex((u32int)page1); kprint("\n");
+		page3 = palloc();
+		kprint("Allocated 0x"); khex((u32int)page3); kprint("\n");
+
+		page5 = palloc();
+		kprint("Allocated 0x"); khex((u32int)page5); kprint("\n");
 	}
 	else if(scanCode == 0x3B)
 	{

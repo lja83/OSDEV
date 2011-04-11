@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-typedef struct {
+typedef struct bitset_s {
 	u32int max_bits;
 	u32int *address;
 } bitset_t;

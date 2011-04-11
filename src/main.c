@@ -8,9 +8,12 @@
 #include "isr.h"
 #include "keyboard.h"
 #include "bitset.h"
+#include "pmm.h"
 
 extern u32int kstart;
 extern u32int ebss;
+extern u32int stack;
+extern u32int stack_begin;
 
 void heapTest()
 {
@@ -89,9 +92,15 @@ void meminfo()
 
 int kmain(multiboot_info_t *mboot_info, unsigned int magic)
 {
+	int i = 0;
+
 	monitor_clear();
 	monitor_put('\n');			// Reserve the top row for the clock ticks
 	mboot_ptr = mboot_info;
+
+	init_descriptor_tables();
+	init_timer(50);
+	register_interrupt_handler(IRQ1, &keyboard);
 
 	if(mboot_ptr->flags & 0x1)
 	{
@@ -102,11 +111,34 @@ int kmain(multiboot_info_t *mboot_info, unsigned int magic)
 		kprint("Upper Memory:");
 		padprint(mboot_ptr->mem_upper, 10, 10, ' ');
 		kprint(" K\n");
+
+		u32int mmap_len = mboot_ptr->mmap_length;
+		u32int start_addr = mboot_ptr->mmap_addr;
+
+		multiboot_memory_map_t *mmap = (multiboot_memory_map_t*)start_addr;
+		memory_region_t *regions = (memory_region_t*)&ebss;
+		i = 0;
+		while((u32int)mmap < start_addr + mmap_len)
+		{
+			if(mmap->type == 1)
+			{
+				regions[i].start_addr = (u32int *)mmap->addr;
+				regions[i].length = mmap->len;
+				i++;
+			}
+			mmap++;
+		}
+		regions[i].start_addr = 0;
+		regions[i].length = 0;
+		kprint("Stack: 0x"); khex((u32int)&stack); kprint("\n");
+		kprint("Stack Begin: 0x"); khex((u32int)&stack_begin); kprint("\n");
+		kprint("EBSS: 0x"); khex((u32int)&ebss); kprint("\n");
+		kprint("Start of regions: 0x"); khex((u32int)regions); kprint("\n");
+		kprint("End of regions: 0x"); khex((u32int)&regions[i]); kprint("\n");
+		kprint("One plus end of regions: 0x"); khex((u32int)&regions[i+1]); kprint("\n");
+		init_pmm((u32int*)&regions[i+1], regions); // put the memory map directly after the regions array.
 	}
 
-	init_descriptor_tables();
-	init_timer(50);
-	register_interrupt_handler(IRQ1, &keyboard);
 	asm volatile("sti");
 
 	kprint("\nWelcome to TUPAHM F1\n");
