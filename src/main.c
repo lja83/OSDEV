@@ -9,11 +9,14 @@
 #include "keyboard.h"
 #include "bitset.h"
 #include "pmm.h"
+#include "vmm.h"
 
 extern u32int kstart;
 extern u32int ebss;
 extern u32int stack;
 extern u32int stack_begin;
+
+
 
 void heapTest()
 {
@@ -99,9 +102,9 @@ int kmain(multiboot_info_t *mboot_info, unsigned int magic)
 	mboot_ptr = mboot_info;
 
 	init_descriptor_tables();
-	init_timer(50);
+//	init_timer(50);
 	register_interrupt_handler(IRQ1, &keyboard);
-
+//
 	if(mboot_ptr->flags & 0x1)
 	{
 		kprint("Lower Memory:");
@@ -139,16 +142,19 @@ int kmain(multiboot_info_t *mboot_info, unsigned int magic)
 		init_pmm((u32int*)&regions[i+1], regions); // put the memory map directly after the regions array.
 	}
 
+
+
+	kprint("\n");
+
 	asm volatile("sti");
 
-	kprint("\nWelcome to TUPAHM F1\n");
-	kprint("Press T to toggle registration of the timer interrupt handler.\n");
-	kprint("Press U to generate an unhandled interrupt.\n");
-	kprint("Press P to generate a page fault.\n");
-	kprint("Press A to cause an assertion failure\n");
-	kprint("Press H to test the heap.\n");
-	kprint("Press M for memory map.\n");
-	kprint("Press F1 to toggle unhandled scancode printing.\n");
+//	kprint("Press T to toggle registration of the timer interrupt handler.\n");
+//	kprint("Press U to generate an unhandled interrupt.\n");
+//	kprint("Press P to generate a page fault.\n");
+//	kprint("Press A to cause an assertion failure\n");
+//	kprint("Press H to test the heap.\n");
+//	kprint("Press M for memory map.\n");
+//	kprint("Press F1 to toggle unhandled scancode printing.\n");
 
 	return 0;
 }
