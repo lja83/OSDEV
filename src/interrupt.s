@@ -1,8 +1,8 @@
-%macro ISR_NOERRCODE 1			; define a macro, taking one parameter
+%macro ISR_NOERRCODE 1		; define a macro, taking one parameter
   [GLOBAL isr%1]			; %1 accesses the first parameter.
   isr%1:
-	cli				; Disable inerrupts
-	push byte 0			; Push a dummy error code
+	cli						; Disable inerrupts
+	push byte 0				; Push a dummy error code
 	push byte %1			; Push the interrupt number
 	jmp isr_common_stub		; Go to our common handler.
 %endmacro
