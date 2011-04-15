@@ -16,8 +16,6 @@ extern u32int ebss;
 extern u32int stack;
 extern u32int stack_begin;
 
-
-
 void heapTest()
 {
 	kprint("Jeff should probably get off his ass and write a heap before you go testing it.\n");
@@ -97,11 +95,16 @@ int kmain(multiboot_info_t *mboot_info, unsigned int magic)
 {
 	int i = 0;
 
+	init_descriptor_tables();
+
+	init_isr_handlers();
+	monitor_write("ISR Handlers Initialised.\n");
+	register_interrupt_handler(14, &page_fault_handler);
+
 	monitor_clear();
 	monitor_put('\n');			// Reserve the top row for the clock ticks
 	mboot_ptr = mboot_info;
 
-	init_descriptor_tables();
 	init_timer(50);
 
 	if(mboot_ptr->flags & 0x1)
@@ -140,8 +143,6 @@ int kmain(multiboot_info_t *mboot_info, unsigned int magic)
 		kprint("One plus end of regions: 0x"); khex((u32int)&regions[i+1]); kprint("\n");
 		init_pmm((u32int*)&regions[i+1], regions); // put the memory map directly after the regions array.
 	}
-
-	init_vmm();
 
 	register_interrupt_handler(IRQ1, &keyboard);
 	asm volatile("sti");

@@ -37,12 +37,12 @@ void page_fault_handler(registers_t regs)
 void init_vmm()
 {
 	int i;
-
-	page_table_t *first_page_table = (page_table_t *) 0x201000;
-	memset(first_page_table, 0x00, sizeof(page_table_t));
-	memset(kernel_page_dir, 0x00, sizeof(page_directory_t));
 	u32int addr;
 	u32int cr0In;
+
+	page_table_t *first_page_table = (page_table_t *) 0x201000;
+	//memset(first_page_table, 0x00, sizeof(page_table_t));
+	//memset(kernel_page_dir, 0x00, sizeof(page_directory_t));
 
 	for(i = 0; i < 1024; i++)
 	{
@@ -56,8 +56,7 @@ void init_vmm()
 	addr &= PDE_FRAME;
 	addr |= (PDE_PRESENT | PTE_WRITEABLE);
 	kernel_page_dir->entries[0] = addr;
-
-	register_interrupt_handler(14, &page_fault_handler);
+	kernel_page_dir->entries[768] = addr;
 
 	asm volatile ("mov %0, %%cr3"::"r"(kernel_page_dir));
 	asm volatile ("mov %%cr0, %0":"=r"(cr0In));

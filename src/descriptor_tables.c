@@ -36,8 +36,6 @@ void init_descriptor_tables()
 	monitor_write("GDT Initialised.\n");
 	init_idt();
 	monitor_write("IDT Initialised.\n");
-	init_isr_handlers();
-	monitor_write("ISR Handlers Initialised.\n");
 }
 
 static void init_idt()
