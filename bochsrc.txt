@@ -8,3 +8,4 @@ mouse: enabled=0
 clock: sync=realtime
 cpu: ips=500000
 display_library: x, options="gui_debug"
+magic_break: enabled=1

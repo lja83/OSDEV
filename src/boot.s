@@ -36,6 +36,7 @@ MultiBootHeader:
 STACKSIZE equ 0x4000					; that's 16k.
 
 loader:
+	xchg bx, bx
 	; Create first page directory entries 1 for ID mapping and 1 for virtual mapping
 	mov	ecx, (kernel_first_page_table - KERNEL_VIRTUAL_BASE)				; save physical memory addr of first page table
 	mov edx, (kernel_page_dir - KERNEL_VIRTUAL_BASE)						; save physical memory addr of kernel page dir
