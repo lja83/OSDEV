@@ -36,30 +36,5 @@ void page_fault_handler(registers_t regs)
 
 void init_vmm()
 {
-	int i;
-	u32int addr;
-	u32int cr0In;
 
-	page_table_t *first_page_table = (page_table_t *) 0x201000;
-	//memset(first_page_table, 0x00, sizeof(page_table_t));
-	//memset(kernel_page_dir, 0x00, sizeof(page_directory_t));
-
-	for(i = 0; i < 1024; i++)
-	{
-		addr = i * 0x1000;
-		addr &= PTE_FRAME;
-		addr |= (PTE_PRESENT | PTE_WRITEABLE);
-		first_page_table->entries[i] = addr;
-	}
-
-	addr = (u32int)first_page_table;
-	addr &= PDE_FRAME;
-	addr |= (PDE_PRESENT | PTE_WRITEABLE);
-	kernel_page_dir->entries[0] = addr;
-	kernel_page_dir->entries[768] = addr;
-
-	asm volatile ("mov %0, %%cr3"::"r"(kernel_page_dir));
-	asm volatile ("mov %%cr0, %0":"=r"(cr0In));
-	cr0In |= 0x80000000;
-	asm volatile ("mov %0, %%cr0"::"r"(cr0In));
 }

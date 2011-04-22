@@ -17,6 +17,7 @@ typedef          char	s8int;
 typedef unsigned int	size_t;
 
 #define NULL 0x0
+#define KERNEL_VIRT_BASE 0xC0000000
 
 #define PANIC(msg) panic(msg, __FILE__, __LINE__);
 #define ASSERT(b) ((b) ? (void)0:panic_assert(__FILE__, __LINE__, #b));

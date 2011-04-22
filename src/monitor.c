@@ -1,7 +1,7 @@
 #include "monitor.h"
 #include "common.h"
 
-u16int *videoMemory = (u16int *)0xC00B8000;
+u16int *videoMemory = (u16int *)(0xB8000 + KERNEL_VIRT_BASE);
 //u16int *videoMemory = (u16int *)0xB8000;
 u8int cursor_y = 0;
 u8int cursor_x = 0;

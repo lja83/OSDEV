@@ -58,7 +58,7 @@ void keyboard(registers_t regs)
 		u32int *page4;
 		u32int *page5;
 
-		kprint("Testing memory allocation and deallocation.\n");
+		kprint("Testing page allocation and deallocation.\n");
 
 		page1 = palloc();
 		kprint("Allocated 0x"); khex((u32int)page1); kprint("\n");
